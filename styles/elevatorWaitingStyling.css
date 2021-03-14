@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Raleway:200");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  background-color: #e6e6e6;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  font-weight: 400;
+}
+
+.bgImage {
+  min-height: 100%;
+  min-width: 1024px;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.btn {
+  position: absolute;
+  transform: translateX(-50%);
+  top: 50.5%;
+  left: 53%;
+  background: #7cbb00;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 400;
+  transition: all 0.2s;
+  padding: 2px 2px;
+  border-radius: 30px;
+  box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
+}
+
+.btnClicked {
+  background: #ff0000;
+}
+
+.btn:active {
+  transform: translate(-50%, 2px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:hover {
+  background-color: #34a853;
+  padding: 3px 3px;
+}
+
+.hidden {
+  display: none;
+}
+
+.text {
+  position: absolute;
+  top: 42%;
+  left: 53%;
+  text-align: center;
+  color: white;
+  transform: translateX(-50%);
+  background: black;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  transition: all 0.2s;
+  border: 3px solid #9fa9a3;
+  border-radius: 7px;
+  padding: 3px 3px;
+}
+
+.time {
+  position: absolute;
+  top: 53%;
+  left: 53%;
+  text-align: center;
+  color: red;
+  transform: translateX(-50%);
+  background: black;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  transition: all 0.2s;
+  border: 3px solid #9fa9a3;
+  border-radius: 7px;
+  padding: 3px 3px;
+}
+
+.floor {
+  position: absolute;
+  top: 20%;
+  left: 53%;
+  text-align: center;
+  color: black;
+  transform: translateX(-50%);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  transition: all 0.2s;
+}
+
+#box {
+  font-family: Arial;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: bold;
+  padding: 20px;
+  background: linear-gradient(to top, #292f33, #ccd6dd 10px, transparent 10px),
+    linear-gradient(to right, #292f33, #ccd6dd 10px, transparent 10px),
+    linear-gradient(to bottom, #292f33, #ccd6dd 10px, transparent 10px),
+    linear-gradient(to left, #292f33, #ccd6dd 10px, transparent 10px);
+  background-origin: border-box;
+}
+
+.firstElevator {
+  position: absolute;
+  top: 15%;
+  left: 32%;
+  text-align: center;
+  color: white;
+  transform: translateX(-50%);
+  background: black;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  transition: all 0.2s;
+  border: 3px solid #9fa9a3;
+  padding: 2px 10px;
+}
+
+.secondElevator {
+  position: absolute;
+  top: 15%;
+  left: 74%;
+  text-align: center;
+  color: white;
+  transform: translateX(-50%);
+  background: black;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  transition: all 0.2s;
+  border: 3px solid #9fa9a3;
+  padding: 3px 10px;
+}
