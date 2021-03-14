@@ -117,6 +117,16 @@ window.addEventListener("load", () => {
   }
 
   function openElevator(firstElevatorCalled) {
+    var sound = new Audio("../sounds/ElevatorDingSound.mp3");
+    sound.loop = false;
+
+    window.setTimeout(function () {
+      sound.play();
+    }, 0);
+    sound.addEventListener("ended", function () {
+      window.location.href = "insideAnElevator.html";
+    });
+
     if (firstElevatorCalled) {
       document.getElementById("firstElevatorFloor").innerHTML =
         firstElevatorFloor + "⬇";
@@ -124,15 +134,5 @@ window.addEventListener("load", () => {
       document.getElementById("secondElevatorFloor").innerHTML =
         secondElevatorFloor + "⬇";
     }
-
-    var sound = new Audio("../sounds/ElevatorDingSound.mp3");
-    sound.loop = false;
-
-    window.setTimeout(function () {
-      sound.play();
-    }, 10);
-    sound.addEventListener("ended", function () {
-      window.location.href = "insideAnElevator.html";
-    });
   }
 });
