@@ -1,5 +1,8 @@
 "use strict";
 
+let btnClicked = false;
+let changeFloor = false;
+
 window.addEventListener("load", () => {
   let ele = document.getElementById("bg_img");
   ele.src = "../images/insideAnElevator2.jpg";
@@ -27,39 +30,99 @@ window.addEventListener("load", () => {
     document.getElementById("seven").classList.remove("hidden");
   });
 
-  let btnOne = document
-    .getElementById("one")
-    .addEventListener("click", firstFloor());
-  let btnTwo = document
-    .getElementById("two")
-    .addEventListener("click", secondFloor());
-  let btnThree = document
-    .getElementById("three")
-    .addEventListener("click", thirdFloor());
-  let btnFour = document
-    .getElementById("four")
-    .addEventListener("click", fourthFloor());
-  let btnFive = document
-    .getElementById("five")
-    .addEventListener("click", fifthFloor());
-  let btnSix = document
-    .getElementById("six")
-    .addEventListener("click", sixthFloor());
-  let btnSeven = document
-    .getElementById("seven")
-    .addEventListener("click", seventhFloor());
+  let btnOne = document.getElementById("one");
+  let btnTwo = document.getElementById("two");
+  let btnThree = document.getElementById("three");
+  let btnFour = document.getElementById("four");
+  let btnFive = document.getElementById("five");
+  let btnSix = document.getElementById("six");
+  let btnSeven = document.getElementById("seven");
+
+  btnOne.addEventListener("click", function () {
+    changeBackground(this);
+    if (changeFloor) {
+      changeElevatorFloor(1);
+    }
+  });
+  btnTwo.addEventListener("click", function () {
+    changeBackground(this);
+    if (changeFloor) {
+      changeElevatorFloor(2);
+    }
+  });
+  btnThree.addEventListener("click", function () {
+    changeBackground(this);
+    if (changeFloor) {
+      changeElevatorFloor(3);
+    }
+  });
+  btnFour.addEventListener("click", function () {
+    changeBackground(this);
+    if (changeFloor) {
+      changeElevatorFloor(4);
+    }
+  });
+  btnFive.addEventListener("click", function () {
+    changeBackground(this);
+    if (changeFloor) {
+      changeElevatorFloor(5);
+    }
+  });
+  btnSix.addEventListener("click", function () {
+    changeBackground(this);
+    if (changeFloor) {
+      changeElevatorFloor(6);
+    }
+  });
+  btnSeven.addEventListener("click", function () {
+    changeBackground(this);
+    if (changeFloor) {
+      changeElevatorFloor(7);
+    }
+  });
 });
 
-function firstFloor() {}
+function manageBtnSelection(btn, btnNumber) {
+  changeBackground(btn);
+  if (changeFloor) {
+    changeElevatorFloor(btnNumber);
+  }
+}
 
-function secondFloor() {}
+function changeBackground(btn) {
+  if (!btnClicked) {
+    btn.style.borderColor = "green";
+    btnClicked = true;
+    changeFloor = true;
+  }
+}
 
-function thirdFloor() {}
+function changeElevatorFloor(floor) {
+  if (firstElevatorCalled) {
+    firstElevatorFloor = floor;
+  } else if (secondElevatorCalled) {
+    secondElevatorFloor = floor;
+  } else {
+    throw "No elevator called";
+  }
 
-function fourthFloor() {}
+  currentFloor = floor;
+  elevatorETA(floor);
+}
 
-function fifthFloor() {}
+function elevatorETA(timeToAddToETA) {
+  var countdownDate = new Date();
+  countdownDate.setSeconds(countdownDate.getSeconds() + timeToAddToETA);
+  countdownDate = countdownDate.getTime();
 
-function sixthFloor() {}
+  var x = setInterval(function () {
+    var currentDate = new Date().getTime();
+    var distance = countdownDate - currentDate;
 
-function seventhFloor() {}
+    if (distance <= 0) {
+      openElevatorOnNewFloor();
+    }
+  }, 1000);
+}
+
+function openElevatorOnNewFloor() {}

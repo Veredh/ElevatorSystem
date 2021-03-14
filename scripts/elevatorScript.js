@@ -1,5 +1,6 @@
 "use strict";
 let elevatorSound;
+let floor = document.getElementById("box");
 
 window.addEventListener("load", () => {
   let bgImage = document.getElementById("bg_img");
@@ -40,7 +41,12 @@ window.addEventListener("load", () => {
       firstElevatorFloor = 1;
       secondElevatorFloor = 1;
       elevatorCountdownTime = 0;
+      firstElevatorCalled = false;
+      secondElevatorCalled = false;
+      currentFloor = 1;
     }
+
+    floor.innerHTML = "Floor " + currentFloor;
   };
   init();
 
@@ -77,10 +83,10 @@ window.addEventListener("load", () => {
     callElevator(false);
   }
 
-  function callElevator(firstElevatorCalled) {
+  function callElevator(isFirstElevatorCalled) {
     let timeToAddToETA;
 
-    if (firstElevatorCalled) {
+    if (isFirstElevatorCalled) {
       firstElevatorFloor > 7
         ? (timeToAddToETA = firstElevatorFloor)
         : (timeToAddToETA = 7);
@@ -90,10 +96,10 @@ window.addEventListener("load", () => {
         : (timeToAddToETA = 7);
     }
 
-    countdownETA(timeToAddToETA, firstElevatorCalled);
+    countdownETA(timeToAddToETA, isFirstElevatorCalled);
   }
 
-  function countdownETA(timeToAddToETA, firstElevatorCalled) {
+  function countdownETA(timeToAddToETA, isFirstElevatorCalled) {
     var countdownClock = document.getElementById("countdownClock");
     var countdownDate = new Date();
     countdownDate.setSeconds(countdownDate.getSeconds() + timeToAddToETA);
@@ -111,18 +117,20 @@ window.addEventListener("load", () => {
       }
 
       if (distance <= 0) {
-        openElevator(firstElevatorCalled);
+        openElevator(isFirstElevatorCalled);
       }
     }, 1000);
   }
 
-  function openElevator(firstElevatorCalled) {
-    if (firstElevatorCalled) {
+  function openElevator(isFirstElevatorCalled) {
+    if (isFirstElevatorCalled) {
       document.getElementById("firstElevatorFloor").innerHTML =
         firstElevatorFloor + "⬇";
+      firstElevatorCalled = true;
     } else {
       document.getElementById("secondElevatorFloor").innerHTML =
         secondElevatorFloor + "⬇";
+      secondElevatorCalled = true;
     }
 
     var sound = new Audio("../sounds/ElevatorDingSound.mp3");
@@ -130,7 +138,7 @@ window.addEventListener("load", () => {
 
     window.setTimeout(function () {
       sound.play();
-    }, 10);
+    }, 0);
     sound.addEventListener("ended", function () {
       window.location.href = "insideAnElevator.html";
     });

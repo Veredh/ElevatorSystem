@@ -3,4 +3,7 @@ let callElevatorButtonClicked,
   secondElevatorFree,
   firstElevatorFloor,
   secondElevatorFloor,
-  elevatorCountdownTime;
+  elevatorCountdownTime,
+  firstElevatorCalled,
+  secondElevatorCalled,
+  currentFloor;
