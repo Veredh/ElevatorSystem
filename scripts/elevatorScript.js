@@ -1,16 +1,7 @@
 "use strict";
 
-let elevatorSound;
 let floor = document.getElementById("box");
-let elevatorButtonCliked,
-  curFloor,
-  firstFree,
-  secondFree,
-  firstFloor,
-  secondFloor,
-  firstCalled,
-  secondCalled,
-  timeToAddToETA;
+let firstFree, secondFree, firstFloor, secondFloor, timeToAddToETA;
 
 window.addEventListener("load", () => {
   let bgImage = document.getElementById("bg_img");
@@ -50,6 +41,20 @@ window.addEventListener("load", () => {
       setExecute(false);
     }
 
+    if (typeof getCurrentFloorValue() == "object") {
+      setCurrentFloorValue(1);
+    }
+
+    printVariables();
+
+    firstFloor = Number(getFirstElevatorFloorValue());
+    secondFloor = Number(getSecondElevatorFloorValue());
+    document.getElementById(
+      "firstElevatorFloor"
+    ).innerHTML = getFirstElevatorFloorValue();
+    document.getElementById(
+      "secondElevatorFloor"
+    ).innerHTML = getSecondElevatorFloorValue();
     floor.innerHTML = "Floor " + getCurrentFloorValue();
   };
   init();
@@ -63,11 +68,11 @@ window.addEventListener("load", () => {
     getSecondElevatorFreeValue() == "false"
       ? (secondFree = false)
       : (secondFree = true);
-    firstFloor = Number(getFirstElevatorFloorValue());
-    secondFloor = Number(getSecondElevatorFloorValue());
 
     if (firstFree && secondFree) {
-      if (firstFloor <= secondFloor) {
+      let closer = getCloserElevator();
+
+      if (closer == 1) {
         callFirstElevator();
       } else {
         callSecondElevator();
@@ -80,6 +85,17 @@ window.addEventListener("load", () => {
       setTimeout(() => {}, 2000);
     }
   });
+
+  function getCloserElevator() {
+    let closerElevator;
+
+    Math.abs(Number(getCurrentFloorValue()) - firstFloor) <=
+    Math.abs(Number(getCurrentFloorValue()) - secondFloor)
+      ? (closerElevator = 1)
+      : (closerElevator = 2);
+
+    return closerElevator;
+  }
 
   function changeButtonBackground() {
     callElevatorButton.style.background = "red";
@@ -97,37 +113,46 @@ window.addEventListener("load", () => {
 
   function callElevator(isFirstElevatorCalled) {
     if (isFirstElevatorCalled) {
-      firstFloor < 5 ? (timeToAddToETA = firstFloor + 3) : (timeToAddToETA = 7);
+      firstFloor == Number(getCurrentFloorValue())
+        ? (timeToAddToETA = 0)
+        : (timeToAddToETA =
+            Math.abs(Number(getCurrentFloorValue()) - firstFloor) + 3);
     } else {
-      secondFloor < 5
-        ? (timeToAddToETA = secondFloor + 3)
-        : (timeToAddToETA = 7);
+      secondFloor == Number(getCurrentFloorValue())
+        ? (timeToAddToETA = 0)
+        : (timeToAddToETA =
+            Math.abs(Number(getCurrentFloorValue()) - secondFloor) + 3);
     }
-
+    console.log(Number(getCurrentFloorValue()));
+    console.log(timeToAddToETA);
     countdownETA(isFirstElevatorCalled);
   }
 
   function countdownETA(isFirstElevatorCalled) {
-    var countdownClock = document.getElementById("countdownClock");
-    var countdownDate = new Date();
-    countdownDate.setSeconds(countdownDate.getSeconds() + timeToAddToETA);
-    countdownDate = countdownDate.getTime();
+    if (timeToAddToETA == 0) {
+      openElevator(isFirstElevatorCalled);
+    } else {
+      var countdownClock = document.getElementById("countdownClock");
+      var countdownDate = new Date();
+      countdownDate.setSeconds(countdownDate.getSeconds() + timeToAddToETA);
+      countdownDate = countdownDate.getTime();
 
-    var x = setInterval(function () {
-      var currentDate = new Date().getTime();
-      var distance = countdownDate - currentDate;
+      var x = setInterval(function () {
+        var currentDate = new Date().getTime();
+        var distance = countdownDate - currentDate;
 
-      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      if (minutes >= 0 && seconds >= 0) {
-        countdownClock.innerHTML = "0" + minutes + ":0" + seconds;
-      }
+        if (minutes >= 0 && seconds >= 0) {
+          countdownClock.innerHTML = "0" + minutes + ":0" + seconds;
+        }
 
-      if (distance <= 0) {
-        openElevator(isFirstElevatorCalled);
-      }
-    }, 1000);
+        if (distance <= 0) {
+          openElevator(isFirstElevatorCalled);
+        }
+      }, 1000);
+    }
   }
 
   function openElevator(isFirstElevatorCalled) {
@@ -143,11 +168,10 @@ window.addEventListener("load", () => {
 
     setCallElevatorButtonClickedValue(false);
 
-    var sound = new Audio("../sounds/ElevatorDingSound.mp3");
-    sound.loop = false;
+    const mySound = document.getElementById("sound");
 
     window.setTimeout(function () {
-      sound.play();
+      mySound.play();
     }, 0);
 
     sound.addEventListener("ended", function () {
