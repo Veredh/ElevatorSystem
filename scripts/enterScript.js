@@ -8,9 +8,7 @@ window.addEventListener("load", () => {
     document.getElementById("enter").classList.add("btn");
     document.getElementById("enter").classList.remove("hidden");
   });
-});
 
-document.addEventListener("DOMContentLoaded", function (event) {
   document.getElementById("enter").addEventListener("click", function () {
     window.location.href = "elevatorWaiting.html";
   });

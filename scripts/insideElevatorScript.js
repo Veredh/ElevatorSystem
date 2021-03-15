@@ -2,8 +2,10 @@
 
 let btnClicked = false;
 let changeFloor = false;
+let curFloor, floorPressed, prevFloor;
 
 window.addEventListener("load", () => {
+  printVariables();
   let bgImage = document.getElementById("bg_img");
   bgImage.src = "../images/insideAnElevator2.jpg";
   bgImage.addEventListener("load", function () {
@@ -28,6 +30,8 @@ window.addEventListener("load", () => {
     document.getElementById("seven").classList.add("btn");
     document.getElementById("seven").classList.add("seven");
     document.getElementById("seven").classList.remove("hidden");
+    document.getElementById("floor").classList.add("floor");
+    document.getElementById("floor").classList.remove("hidden");
   });
 
   let btnOne = document.getElementById("one");
@@ -37,6 +41,9 @@ window.addEventListener("load", () => {
   let btnFive = document.getElementById("five");
   let btnSix = document.getElementById("six");
   let btnSeven = document.getElementById("seven");
+
+  curFloor = Number(getCurrentFloorValue());
+  document.getElementById("floor").innerHTML = curFloor;
 
   btnOne.addEventListener("click", function () {
     changeBackground(this);
@@ -81,46 +88,70 @@ window.addEventListener("load", () => {
     }
   });
 
-  printVariables();
-});
-
-function changeBackground(btn) {
-  if (!btnClicked) {
-    btn.style.borderColor = "green";
-    btnClicked = true;
-    changeFloor = true;
-  }
-}
-
-function changeElevatorFloor(floor) {
-  if (getFirstElevatorCalledValue() == "true") {
-    setFirstElevatorFloorValue(floor);
-  } else if (getSecondElevatorCalledValue() == "true") {
-    setSecondElevatorFloorValue(floor);
-  } else {
-    throw "No elevator called";
-  }
-
-  setCurrentFloorValue(floor);
-  printVariables();
-  elevatorETA(floor);
-}
-
-function elevatorETA(timeToAddToETA) {
-  var countdownDate = new Date();
-  countdownDate.setSeconds(countdownDate.getSeconds() + timeToAddToETA);
-  countdownDate = countdownDate.getTime();
-
-  var x = setInterval(function () {
-    var currentDate = new Date().getTime();
-    var distance = countdownDate - currentDate;
-
-    if (distance <= 0) {
-      openElevatorOnNewFloor();
+  function changeBackground(btn) {
+    if (!btnClicked) {
+      btn.style.borderColor = "green";
+      btnClicked = true;
+      changeFloor = true;
     }
-  }, 1000);
-}
+  }
 
-function openElevatorOnNewFloor() {
-  window.location.href = "elevatorWaiting.html";
-}
+  function changeElevatorFloor(floor) {
+    if (getFirstElevatorCalledValue() == "true") {
+      setFirstElevatorFloorValue(floor);
+    } else if (getSecondElevatorCalledValue() == "true") {
+      setSecondElevatorFloorValue(floor);
+    } else {
+      throw "No elevator called";
+    }
+
+    floorPressed = floor;
+    prevFloor = Number(getCurrentFloorValue());
+    setCurrentFloorValue(floor);
+    elevatorETA(floor);
+  }
+
+  function elevatorETA(timeToAddToETA) {
+    var countdownDate = new Date();
+    countdownDate.setSeconds(countdownDate.getSeconds() + timeToAddToETA);
+    countdownDate = countdownDate.getTime();
+
+    var x = setInterval(function () {
+      var currentDate = new Date().getTime();
+      var distance = countdownDate - currentDate;
+
+      if (curFloor > timeToAddToETA) {
+        curFloor--;
+      } else if (curFloor < timeToAddToETA) {
+        curFloor++;
+      }
+      document.getElementById("floor").innerHTML = curFloor;
+
+      if (distance <= 0) {
+        openElevatorOnNewFloor();
+      }
+    }, 1000);
+  }
+
+  function openElevatorOnNewFloor() {
+    if (getFirstElevatorCalledValue() == "true") {
+      setFirstElevatorFreeValue(true);
+      setFirstElevatorCalledValue(false);
+    } else if (getSecondElevatorCalledValue() == "true") {
+      setSecondElevatorFreeValue(true);
+      setSecondElevatorCalledValue(false);
+    } else {
+      throw "No elevator called";
+    }
+
+    const mySound = document.getElementById("sound");
+
+    window.setTimeout(function () {
+      mySound.play();
+    }, 0);
+
+    sound.addEventListener("ended", function () {
+      window.location.href = "elevatorWaiting.html";
+    });
+  }
+});
