@@ -4,9 +4,9 @@ let btnClicked = false;
 let changeFloor = false;
 
 window.addEventListener("load", () => {
-  let ele = document.getElementById("bg_img");
-  ele.src = "../images/insideAnElevator2.jpg";
-  ele.addEventListener("load", function () {
+  let bgImage = document.getElementById("bg_img");
+  bgImage.src = "../images/insideAnElevator2.jpg";
+  bgImage.addEventListener("load", function () {
     document.getElementById("one").classList.add("btn");
     document.getElementById("one").classList.add("one");
     document.getElementById("one").classList.remove("hidden");
@@ -80,14 +80,9 @@ window.addEventListener("load", () => {
       changeElevatorFloor(7);
     }
   });
-});
 
-function manageBtnSelection(btn, btnNumber) {
-  changeBackground(btn);
-  if (changeFloor) {
-    changeElevatorFloor(btnNumber);
-  }
-}
+  printVariables();
+});
 
 function changeBackground(btn) {
   if (!btnClicked) {
@@ -98,15 +93,16 @@ function changeBackground(btn) {
 }
 
 function changeElevatorFloor(floor) {
-  if (firstElevatorCalled) {
-    firstElevatorFloor = floor;
-  } else if (secondElevatorCalled) {
-    secondElevatorFloor = floor;
+  if (getFirstElevatorCalledValue() == "true") {
+    setFirstElevatorFloorValue(floor);
+  } else if (getSecondElevatorCalledValue() == "true") {
+    setSecondElevatorFloorValue(floor);
   } else {
     throw "No elevator called";
   }
 
-  currentFloor = floor;
+  setCurrentFloorValue(floor);
+  printVariables();
   elevatorETA(floor);
 }
 
@@ -125,4 +121,6 @@ function elevatorETA(timeToAddToETA) {
   }, 1000);
 }
 
-function openElevatorOnNewFloor() {}
+function openElevatorOnNewFloor() {
+  window.location.href = "elevatorWaiting.html";
+}
