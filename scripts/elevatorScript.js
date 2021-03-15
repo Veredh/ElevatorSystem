@@ -1,5 +1,16 @@
 "use strict";
+
 let elevatorSound;
+let floor = document.getElementById("box");
+let elevatorButtonCliked,
+  curFloor,
+  firstFree,
+  secondFree,
+  firstFloor,
+  secondFloor,
+  firstCalled,
+  secondCalled,
+  timeToAddToETA;
 
 window.addEventListener("load", () => {
   let bgImage = document.getElementById("bg_img");
@@ -26,37 +37,44 @@ window.addEventListener("load", () => {
   });
 
   const init = function () {
-    if (
-      typeof callElevatorButtonClicked == "undefined" &&
-      typeof firstElevatorFree == "undefined" &&
-      typeof secondElevatorFree == "undefined" &&
-      typeof firstElevatorFloor == "undefined" &&
-      typeof secondElevatorFloor == "undefined" &&
-      typeof elevatorCountdownTime == "undefined"
-    ) {
-      callElevatorButtonClicked = false;
-      firstElevatorFree = true;
-      secondElevatorFree = true;
-      firstElevatorFloor = 1;
-      secondElevatorFloor = 1;
-      elevatorCountdownTime = 0;
+    if (typeof getExecute() == "object") {
+      setCallElevatorButtonClickedValue(false);
+      setFirstElevatorFreeValue(true);
+      setSecondElevatorFreeValue(true);
+      setFirstElevatorFloorValue(1);
+      setSecondElevatorFloorValue(1);
+      setElevatorCountdownTimeValue(0);
+      setFirstElevatorCalledValue(false);
+      setSecondElevatorCalledValue(false);
+      setCurrentFloorValue(1);
+      setExecute(false);
     }
+
+    floor.innerHTML = "Floor " + getCurrentFloorValue();
   };
   init();
 
   callElevatorButton.addEventListener("click", function () {
-    callElevatorButtonClicked = true;
+    setCallElevatorButtonClickedValue(true);
     changeButtonBackground();
+    getFirstElevatorFreeValue() == "false"
+      ? (firstFree = false)
+      : (firstFree = true);
+    getSecondElevatorFreeValue() == "false"
+      ? (secondFree = false)
+      : (secondFree = true);
+    firstFloor = Number(getFirstElevatorFloorValue());
+    secondFloor = Number(getSecondElevatorFloorValue());
 
-    if (firstElevatorFree && secondElevatorFree) {
-      if (firstElevatorFloor <= secondElevatorFloor) {
+    if (firstFree && secondFree) {
+      if (firstFloor <= secondFloor) {
         callFirstElevator();
       } else {
         callSecondElevator();
       }
-    } else if (secondElevatorFree) {
+    } else if (secondFree) {
       callSecondElevator();
-    } else if (firstElevatorFree) {
+    } else if (firstFree) {
       callFirstElevator();
     } else {
       setTimeout(() => {}, 2000);
@@ -68,32 +86,28 @@ window.addEventListener("load", () => {
   }
 
   function callFirstElevator() {
-    firstElevatorFree = false;
+    setFirstElevatorFreeValue(false);
     callElevator(true);
   }
 
   function callSecondElevator() {
-    secondElevatorFree = false;
+    setSecondElevatorFreeValue(false);
     callElevator(false);
   }
 
-  function callElevator(firstElevatorCalled) {
-    let timeToAddToETA;
-
-    if (firstElevatorCalled) {
-      firstElevatorFloor > 7
-        ? (timeToAddToETA = firstElevatorFloor)
-        : (timeToAddToETA = 7);
+  function callElevator(isFirstElevatorCalled) {
+    if (isFirstElevatorCalled) {
+      firstFloor < 5 ? (timeToAddToETA = firstFloor + 3) : (timeToAddToETA = 7);
     } else {
-      secondElevatorFloor > 7
-        ? (timeToAddToETA = secondElevatorFloor)
+      secondFloor < 5
+        ? (timeToAddToETA = secondFloor + 3)
         : (timeToAddToETA = 7);
     }
 
-    countdownETA(timeToAddToETA, firstElevatorCalled);
+    countdownETA(isFirstElevatorCalled);
   }
 
-  function countdownETA(timeToAddToETA, firstElevatorCalled) {
+  function countdownETA(isFirstElevatorCalled) {
     var countdownClock = document.getElementById("countdownClock");
     var countdownDate = new Date();
     countdownDate.setSeconds(countdownDate.getSeconds() + timeToAddToETA);
@@ -111,26 +125,31 @@ window.addEventListener("load", () => {
       }
 
       if (distance <= 0) {
-        openElevator(firstElevatorCalled);
+        openElevator(isFirstElevatorCalled);
       }
     }, 1000);
   }
 
-  function openElevator(firstElevatorCalled) {
-    if (firstElevatorCalled) {
+  function openElevator(isFirstElevatorCalled) {
+    if (isFirstElevatorCalled) {
       document.getElementById("firstElevatorFloor").innerHTML =
-        firstElevatorFloor + "⬇";
+        getFirstElevatorFloorValue() + "⬇";
+      setFirstElevatorCalledValue(true);
     } else {
       document.getElementById("secondElevatorFloor").innerHTML =
-        secondElevatorFloor + "⬇";
+        getSecondElevatorFloorValue() + "⬇";
+      setSecondElevatorCalledValue(true);
     }
+
+    setCallElevatorButtonClickedValue(false);
 
     var sound = new Audio("../sounds/ElevatorDingSound.mp3");
     sound.loop = false;
 
     window.setTimeout(function () {
       sound.play();
-    }, 10);
+    }, 0);
+
     sound.addEventListener("ended", function () {
       window.location.href = "insideAnElevator.html";
     });
